@@ -20,11 +20,13 @@ InsertCoin ==
     /\ UNCHANGED << cansDispensed >>
 
 Buy == 
+    /\ coinInserted
     /\ coinInserted' = FALSE
     /\ cansDispensed' = cansDispensed + 1
     /\ UNCHANGED << coinsCollected >>
 
 Cancel == 
+    /\ coinInserted
     /\ coinInserted' = FALSE
     /\ coinsCollected' = coinsCollected - 1
     /\ UNCHANGED << cansDispensed >>
@@ -41,5 +43,7 @@ Next ==
 Spec == Init /\ [][Next]_<<vars>> /\ WF_vars(Next)
 
 Safety == coinInserted ~> ~ coinInserted
+
+Limit == cansDispensed < 5
 
 ====
