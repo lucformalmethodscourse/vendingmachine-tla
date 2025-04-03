@@ -2,6 +2,9 @@
 
 EXTENDS Naturals
 
+CONSTANTS
+    MAX_STEPS
+
 VARIABLES 
     coinInserted,
     cansDispensed,
@@ -15,8 +18,6 @@ TypeOK ==
     /\ cansDispensed >= 0
     /\ coinsCollected >= 0
     /\ steps >= 0
-
-MAX_STEPS == 20
 
 Continue == steps < MAX_STEPS /\ steps' = steps + 1
 
