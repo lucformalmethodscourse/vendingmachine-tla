@@ -1,31 +1,52 @@
 -------------------------- MODULE Vending  --------------------------
 
-EXTENDS TLC, Naturals
+EXTENDS Naturals
 
 VARIABLES 
     coinInserted,
     cansDispensed,
-    coinsCollected
+    coinsCollected,
+    steps
 
-vars == << coinInserted, cansDispensed, coinsCollected >>
+vars == << coinInserted, cansDispensed, coinsCollected, steps >>
+
+TypeOK ==
+    /\ coinInserted \in {FALSE, TRUE}
+    /\ cansDispensed >= 0
+    /\ coinsCollected >= 0
+    /\ steps >= 0
+
+MAX_STEPS == 20
+
+Continue == steps < MAX_STEPS /\ steps' = steps + 1
+
+Terminate == steps >= MAX_STEPS
+
+Done == 
+    /\ Terminate
+    /\ UNCHANGED vars
 
 Init == 
     /\ coinInserted = FALSE
     /\ cansDispensed = 0
     /\ coinsCollected = 0
+    /\ steps = 0
 
 InsertCoin == 
+    /\ Continue
     /\ coinInserted' = TRUE
     /\ coinsCollected' = coinsCollected + 1
     /\ UNCHANGED << cansDispensed >>
 
 Buy == 
+    /\ Continue
     /\ coinInserted
     /\ coinInserted' = FALSE
     /\ cansDispensed' = cansDispensed + 1
     /\ UNCHANGED << coinsCollected >>
 
 Cancel == 
+    /\ Continue
     /\ coinInserted
     /\ coinInserted' = FALSE
     /\ coinsCollected' = coinsCollected - 1
@@ -39,11 +60,10 @@ Next ==
     \/ InsertCoin
     \/ Buy
     \/ Cancel
+    \/ Done
 
 Spec == Init /\ [][Next]_<<vars>> /\ WF_vars(Next)
 
-Safety == coinInserted ~> ~ coinInserted
-
-Limit == cansDispensed < 5
+Safety == TRUE \* coinInserted ~> ~ coinInserted
 
 ====
