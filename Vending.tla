@@ -3,42 +3,54 @@
 EXTENDS Naturals
 
 CONSTANTS
+    MAX_CANS,
     MAX_COINS
 
-VARIABLES 
+VARIABLES
     coinInserted,
+    cansAvailable,
     cansDispensed,
     coinsCollected
 
-vars == << coinInserted, cansDispensed, coinsCollected >>
+vars == << coinInserted, cansAvailable, cansDispensed, coinsCollected >>
 
 TypeOK ==
     /\ coinInserted \in {FALSE, TRUE}
+    /\ cansAvailable \in 0 .. MAX_CANS
     /\ cansDispensed >= 0
-    /\ coinsCollected >= 0
+    /\ coinsCollected \in 0 .. MAX_COINS
 
-Init == 
+Init ==
     /\ coinInserted = FALSE
+    /\ cansAvailable \in 0 .. MAX_CANS
     /\ cansDispensed = 0
     /\ coinsCollected = 0
 
-InsertCoin == 
+InsertCoin ==
     /\ coinsCollected <= MAX_COINS
     /\ coinInserted' = TRUE
     /\ coinsCollected' = coinsCollected + 1
-    /\ UNCHANGED << cansDispensed >>
+    /\ UNCHANGED << cansAvailable, cansDispensed >>
 
-Buy == 
-    /\ coinInserted
+Buy ==
+    /\ cansAvailable > 0
     /\ coinInserted' = FALSE
+    /\ cansAvailable' = cansAvailable - 1
     /\ cansDispensed' = cansDispensed + 1
     /\ UNCHANGED << coinsCollected >>
 
-Cancel == 
+Cancel ==
     /\ coinInserted
     /\ coinInserted' = FALSE
     /\ coinsCollected' = coinsCollected - 1
-    /\ UNCHANGED << cansDispensed >>
+    /\ UNCHANGED << cansAvailable, cansDispensed >>
+
+\* Timeout
+
+\* RestockInventory
+
+\* CollectCoins
+
 
 Next == 
     \/ InsertCoin
@@ -47,6 +59,8 @@ Next ==
 
 Spec == Init /\ [][Next]_<<vars>> /\ WF_vars(Next)
 
-Safety == [](coinInserted ~> ~ coinInserted)
+Accounting == coinsCollected \in {cansDispensed, cansDispensed + 1}
+
+Correctness == [](coinInserted ~> ~ coinInserted)
 
 ====
