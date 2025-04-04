@@ -51,8 +51,7 @@ Cancel ==
 
 \* CollectCoins
 
-
-Next == 
+Next ==
     \/ InsertCoin
     \/ Buy
     \/ Cancel
