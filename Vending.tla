@@ -47,6 +47,6 @@ Next ==
 
 Spec == Init /\ [][Next]_<<vars>> /\ WF_vars(Next)
 
-Safety == TRUE \* coinInserted ~> ~ coinInserted
+Safety == [](coinInserted ~> ~ coinInserted)
 
 ====
