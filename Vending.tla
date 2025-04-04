@@ -3,51 +3,47 @@
 EXTENDS Naturals
 
 CONSTANTS
-    MAX_STEPS
+    MAX_COINS
 
 VARIABLES 
     coinInserted,
     cansDispensed,
-    coinsCollected,
-    steps
+    coinsCollected
 
-vars == << coinInserted, cansDispensed, coinsCollected, steps >>
+vars == << coinInserted, cansDispensed, coinsCollected >>
 
 TypeOK ==
     /\ coinInserted \in {FALSE, TRUE}
     /\ cansDispensed >= 0
     /\ coinsCollected >= 0
-    /\ steps >= 0
+(*
+Continue == steps < MAX_COINS /\ steps' = steps + 1
 
-Continue == steps < MAX_STEPS /\ steps' = steps + 1
-
-Terminate == steps >= MAX_STEPS
+Terminate == steps >= MAX_COINS
 
 Done == 
     /\ Terminate
     /\ UNCHANGED vars
+*)
 
 Init == 
     /\ coinInserted = FALSE
     /\ cansDispensed = 0
     /\ coinsCollected = 0
-    /\ steps = 0
 
 InsertCoin == 
-    /\ Continue
+    /\ coinsCollected <= MAX_COINS
     /\ coinInserted' = TRUE
     /\ coinsCollected' = coinsCollected + 1
     /\ UNCHANGED << cansDispensed >>
 
 Buy == 
-    /\ Continue
     /\ coinInserted
     /\ coinInserted' = FALSE
     /\ cansDispensed' = cansDispensed + 1
     /\ UNCHANGED << coinsCollected >>
 
 Cancel == 
-    /\ Continue
     /\ coinInserted
     /\ coinInserted' = FALSE
     /\ coinsCollected' = coinsCollected - 1
@@ -61,7 +57,6 @@ Next ==
     \/ InsertCoin
     \/ Buy
     \/ Cancel
-    \/ Done
 
 Spec == Init /\ [][Next]_<<vars>> /\ WF_vars(Next)
 
