@@ -16,15 +16,6 @@ TypeOK ==
     /\ coinInserted \in {FALSE, TRUE}
     /\ cansDispensed >= 0
     /\ coinsCollected >= 0
-(*
-Continue == steps < MAX_COINS /\ steps' = steps + 1
-
-Terminate == steps >= MAX_COINS
-
-Done == 
-    /\ Terminate
-    /\ UNCHANGED vars
-*)
 
 Init == 
     /\ coinInserted = FALSE
@@ -48,10 +39,6 @@ Cancel ==
     /\ coinInserted' = FALSE
     /\ coinsCollected' = coinsCollected - 1
     /\ UNCHANGED << cansDispensed >>
-
-\* ReturnCoin == TRUE
-
-\* DispenseCan == TRUE
 
 Next == 
     \/ InsertCoin
