@@ -23,8 +23,8 @@ TypeOK ==
 Init ==
     /\ coinInserted = FALSE
     /\ cansAvailable \in 0 .. MAX_CANS
-    /\ cansDispensed = 0
-    /\ coinsCollected = 0
+    /\ coinsCollected \in 0 .. MAX_COINS
+    /\ cansDispensed = coinsCollected
 
 InsertCoin ==
     /\ coinsCollected <= MAX_COINS
