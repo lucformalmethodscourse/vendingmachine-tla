@@ -27,23 +27,23 @@ Init ==
     /\ cansDispensed = coinsCollected
 
 InsertCoin ==
-    /\ coinsCollected <= MAX_COINS
+    /\ ~ coinInserted
     /\ coinInserted' = TRUE
-    /\ coinsCollected' = coinsCollected + 1
-    /\ UNCHANGED << cansAvailable, cansDispensed >>
+    /\ UNCHANGED << cansAvailable, cansDispensed, coinsCollected >>
 
 Buy ==
+    /\ coinInserted
+    /\ coinsCollected < MAX_COINS
     /\ cansAvailable > 0
     /\ coinInserted' = FALSE
+    /\ coinsCollected' = coinsCollected + 1
     /\ cansAvailable' = cansAvailable - 1
     /\ cansDispensed' = cansDispensed + 1
-    /\ UNCHANGED << coinsCollected >>
 
 Cancel ==
     /\ coinInserted
     /\ coinInserted' = FALSE
-    /\ coinsCollected' = coinsCollected - 1
-    /\ UNCHANGED << cansAvailable, cansDispensed >>
+    /\ UNCHANGED << cansAvailable, cansDispensed, coinsCollected >>
 
 \* Timeout
 
@@ -58,7 +58,7 @@ Next ==
 
 Spec == Init /\ [][Next]_<<vars>> /\ WF_vars(Next)
 
-Accounting == coinsCollected \in {cansDispensed, cansDispensed + 1}
+Accounting == coinsCollected = cansDispensed
 
 Correctness == [](coinInserted ~> ~ coinInserted)
 
