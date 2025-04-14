@@ -1,5 +1,7 @@
 # Simple Vending Machine in TLA+
 
+[![Syntax-check models](https://github.com/lucformalmethodscourse/vendingmachine-tla/actions/workflows/main.yml/badge.svg)](https://github.com/lucformalmethodscourse/vendingmachine-tla/actions/workflows/main.yml)
+
 This is a very simple soda can vending machine model in TLA+. 
 
 It includes `TypeOK` and `Accounting` invariants and `Correctness` temporal property:
